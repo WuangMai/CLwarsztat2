@@ -7,12 +7,16 @@ import java.sql.*;
 public class UserDAO {
     private static final String CREATE_USER_QUERY = "INSERT INTO users(username, email, password) VALUES (?,?,?)";
     //    TODO Sprawdzić czy jak dodam inne parametry to będzie działać/ username = ? OR email = ?
-    private static final String READ_USER_QUERY = "SELECT * FROM users WHERE username = ?";
+    private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String UPDATE_USER_QUERY = "UPDATE user SET username = ?";
     private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE username = ? AND email = ?";
 
+    private final String DBurl = "jdbc:mysql://localhost:3306/workshop2";
+    private final String DBuser = "root";
+    private final String DBpass = "coderslab";
+
     public User create(User user) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/workshop2", "root", "coderslab")) {
+        try (Connection conn = DriverManager.getConnection(DBurl, DBuser, DBpass)) {
             PreparedStatement preStmt = conn.prepareStatement(CREATE_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
             preStmt.setString(1, user.getUserName());
             preStmt.setString(2, user.getEmail());
@@ -23,9 +27,65 @@ public class UserDAO {
             if (rs.next()) {
                 user.setId(rs.getInt(1));
             }
+            preStmt.close();
+            rs.close();
             return user;
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public User read(int UserId) {
+        ResultSet rs = null;
+        PreparedStatement preStmt = null;
+        Connection conn = null;
+        User user = new User();
+
+        try {
+            conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
+            preStmt = conn.prepareStatement(READ_USER_QUERY);
+            preStmt.setInt(1, UserId);
+//            preStmt.executeQuery();
+
+            rs = preStmt.executeQuery();
+            if (rs.next()) {
+                int columnCount = rs.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    switch (i) {
+                        case 1 -> user.setId(rs.getInt(i));
+                        case 2 -> user.setEmail(rs.getString(i));
+                        case 3 -> user.setUserName(rs.getString(i));
+                        case 4 -> user.setPassword(rs.getString(i));
+                    }
+                }
+            }
+            return user;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preStmt != null) {
+                try {
+                    preStmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
