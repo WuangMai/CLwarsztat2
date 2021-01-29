@@ -8,7 +8,7 @@ public class UserDAO {
     private static final String CREATE_USER_QUERY = "INSERT INTO users(username, email, password) VALUES (?,?,?)";
     //    TODO Sprawdzić czy jak dodam inne parametry to będzie działać/ username = ? OR email = ?
     private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String UPDATE_USER_QUERY = "UPDATE user SET username = ?";
+    private static final String UPDATE_USER_QUERY = "UPDATE users SET email = ?, username = ?, password = ? WHERE id = ?";
     private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE username = ? AND email = ?";
 
     private final String DBurl = "jdbc:mysql://localhost:3306/workshop2";
@@ -47,7 +47,6 @@ public class UserDAO {
             conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
             preStmt = conn.prepareStatement(READ_USER_QUERY);
             preStmt.setInt(1, UserId);
-//            preStmt.executeQuery();
 
             rs = preStmt.executeQuery();
             if (rs.next()) {
@@ -65,29 +64,60 @@ public class UserDAO {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (preStmt != null) {
-                try {
-                    preStmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeConnections(preStmt, conn, rs);
         }
         return null;
+    }
+
+    public void update(User user) {
+        PreparedStatement preStmt = null;
+        Connection conn = null;
+        User userOld = new User();
+        try {
+            conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
+            preStmt = conn.prepareStatement(UPDATE_USER_QUERY);
+            preStmt.setString(1, !user.getEmail().equals(userOld.getEmail()) ? user.getEmail() : userOld.getEmail());
+            preStmt.setString(2, !user.getUserName().equals(userOld.getUserName()) ? user.getUserName() : userOld.getUserName());
+            preStmt.setString(3, !user.getPassword().equals(userOld.getPassword()) ? user.getPassword() : userOld.getPassword());
+
+//            preStmt.setString(2, user.getUserName());
+//            preStmt.setString(3, user.getPassword());
+            preStmt.setInt(4, user.getId());
+            int result = preStmt.executeUpdate();
+            if (result > 0) {
+                System.out.println("Successfully updated database!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnections(preStmt, conn, null);
+
+        }
+    }
+
+    private void closeConnections(PreparedStatement preStmt, Connection conn, ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (preStmt != null) {
+            try {
+                preStmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String hashPw(String pass) {
