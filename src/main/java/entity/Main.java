@@ -24,7 +24,7 @@ public class Main {
 //        System.out.println(userDAO.read(2).getPassword());
 
 //        Updating user test <--------------------------------------
-        UserDAO userDAO = new UserDAO();
+//        UserDAO userDAO = new UserDAO();
 //        for (int i = 1; i <= 353; i++){
 //            User u1 = userDAO.read(i);
 //            u1.setPassword(u1.getPassword());
@@ -47,8 +47,8 @@ public class Main {
 //        userDAO.create(user);
 //        userDAO.delete(2);
 //        Finding All users test <----------------------------------
-//        UserDAO userDAO = new UserDAO();
-//        System.out.println(userDAO.findAll().length);
+        UserDAO userDAO = new UserDAO();
+        System.out.println(userDAO.findAll().length);
 ////        System.out.println(Arrays.toString(userDAO.findAll()));
 //        System.out.println(userDAO.findAll()[0].getEmail());
 //        System.out.println(userDAO.findAll()[1].getEmail());
