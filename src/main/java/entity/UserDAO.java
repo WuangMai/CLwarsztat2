@@ -1,5 +1,6 @@
 package entity;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
@@ -51,14 +52,7 @@ public class UserDAO {
             rs = preStmt.executeQuery();
             if (rs.next()) {
                 int columnCount = rs.getMetaData().getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    switch (i) {
-                        case 1 -> user.setId(rs.getInt(i));
-                        case 2 -> user.setEmail(rs.getString(i));
-                        case 3 -> user.setUserName(rs.getString(i));
-                        case 4 -> user.setPassword(rs.getString(i));
-                    }
-                }
+                setUser(rs, user, columnCount);
             }
             return user;
         } catch (SQLException ex) {
@@ -67,6 +61,52 @@ public class UserDAO {
             closeConnections(preStmt, conn, rs);
         }
         return null;
+    }
+
+    public User[] findAll() {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        User[] returnUser = new User[0];
+        User user = new User();
+        try {
+            conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM users");
+
+            int columnCount = rs.getMetaData().getColumnCount();
+            while (rs.next()) {
+                setUser(rs, user, columnCount);
+                returnUser = ArrayUtils.add(returnUser, user);
+                user = new User();
+            }
+
+            return returnUser;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            closeConnections(null, conn, rs);
+        }
+        return null;
+    }
+
+    private void setUser(ResultSet rs, User user, int columnCount) throws SQLException {
+        for (int i = 1; i <= columnCount; i++) {
+            switch (i) {
+                case 1 -> user.setId(rs.getInt(i));
+                case 2 -> user.setEmail(rs.getString(i));
+                case 3 -> user.setUserName(rs.getString(i));
+                case 4 -> user.setPassword(rs.getString(i));
+            }
+        }
     }
 
     public void update(User user) {

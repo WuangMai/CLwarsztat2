@@ -2,6 +2,8 @@ package entity;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
 //        Creating user test <--------------------------------------
@@ -29,15 +31,22 @@ public class Main {
 //
 //        userDAO.update(u1);
 //        System.out.println(u1.getId());
+
 //        Deleting user test <----------------------------------------
-        UserDAO userDAO = new UserDAO();
+//        UserDAO userDAO = new UserDAO();
 //        userDAO.delete(2);
-        User user = new User();
+//        User user = new User();
 //        user.setEmail("iza@gmail.com");
 //        user.setUserName("Iza");
 //        user.setPassword("izaiza");
 //        userDAO.create(user);
-        userDAO.delete(2);
+//        userDAO.delete(2);
+//        Finding All users test <----------------------------------
+        UserDAO userDAO = new UserDAO();
+        System.out.println(userDAO.findAll().length);
+        System.out.println(Arrays.toString(userDAO.findAll()));
+        System.out.println(userDAO.findAll()[0].getEmail());
+        System.out.println(userDAO.findAll()[1].getEmail());
 
 
     }
