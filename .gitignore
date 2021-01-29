@@ -1,8 +1,9 @@
 # Default ignored files
-/shelf/
+/.idea/shelf/
 /workspace.xml
 src/main/java/entity/workshop2.sql
-/home/wuang/IdeaProjects/CLwarsztat2/.idea
+CLwarsztat2.iml
+.idea
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
