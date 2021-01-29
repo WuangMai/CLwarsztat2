@@ -22,12 +22,22 @@ public class Main {
 //        System.out.println(userDAO.read(2).getPassword());
 
 //        Updating user test <--------------------------------------
+//        UserDAO userDAO = new UserDAO();
+//        User u1 = userDAO.read(1);
+//        u1.setUserName("Wuangmai");
+//        u1.setEmail("wuangmai@gmail.com");
+//
+//        userDAO.update(u1);
+//        System.out.println(u1.getId());
+//        Deleting user test <----------------------------------------
         UserDAO userDAO = new UserDAO();
-        User u1 = userDAO.read(1);
-        u1.setUserName("WuangMai");
-        u1.setEmail("wuangmai@gmail.com");
-
-        userDAO.update(u1);
+//        userDAO.delete(2);
+        User user = new User();
+//        user.setEmail("iza@gmail.com");
+//        user.setUserName("Iza");
+//        user.setPassword("izaiza");
+//        userDAO.create(user);
+        userDAO.delete(2);
 
 
     }

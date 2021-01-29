@@ -9,7 +9,7 @@ public class UserDAO {
     //    TODO Sprawdzić czy jak dodam inne parametry to będzie działać/ username = ? OR email = ?
     private static final String READ_USER_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String UPDATE_USER_QUERY = "UPDATE users SET email = ?, username = ?, password = ? WHERE id = ?";
-    private static final String DELETE_USER_QUERY = "DELETE FROM user WHERE username = ? AND email = ?";
+    private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id = ?";
 
     private final String DBurl = "jdbc:mysql://localhost:3306/workshop2";
     private final String DBuser = "root";
@@ -72,27 +72,40 @@ public class UserDAO {
     public void update(User user) {
         PreparedStatement preStmt = null;
         Connection conn = null;
-        User userOld = new User();
         try {
             conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
             preStmt = conn.prepareStatement(UPDATE_USER_QUERY);
-            preStmt.setString(1, !user.getEmail().equals(userOld.getEmail()) ? user.getEmail() : userOld.getEmail());
-            preStmt.setString(2, !user.getUserName().equals(userOld.getUserName()) ? user.getUserName() : userOld.getUserName());
-            preStmt.setString(3, !user.getPassword().equals(userOld.getPassword()) ? user.getPassword() : userOld.getPassword());
-
-//            preStmt.setString(2, user.getUserName());
-//            preStmt.setString(3, user.getPassword());
+            preStmt.setString(1, user.getEmail());
+            preStmt.setString(2, user.getUserName());
+            preStmt.setString(3, user.getPassword());
             preStmt.setInt(4, user.getId());
             int result = preStmt.executeUpdate();
-            if (result > 0) {
-                System.out.println("Successfully updated database!");
-            }
+            System.out.println(result > 0 ? "Successfully updated database!" : "Query not executed. Probably not existing User ID?");
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeConnections(preStmt, conn, null);
 
+        }
+    }
+
+    public void delete(int userId) {
+        PreparedStatement preStmt = null;
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection(DBurl, DBuser, DBpass);
+            preStmt = conn.prepareStatement(DELETE_USER_QUERY);
+            preStmt.setInt(1, userId);
+            int result = preStmt.executeUpdate();
+            System.out.println(result > 0 ? "Successfully updated database!" : "Query not executed. Probably not existing User ID?");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnections(preStmt, conn, null);
         }
     }
 
