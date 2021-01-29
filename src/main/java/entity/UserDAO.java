@@ -117,7 +117,7 @@ public class UserDAO {
             preStmt = conn.prepareStatement(UPDATE_USER_QUERY);
             preStmt.setString(1, user.getEmail());
             preStmt.setString(2, user.getUserName());
-            preStmt.setString(3, user.getPassword());
+            preStmt.setString(3, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
             preStmt.setInt(4, user.getId());
             int result = preStmt.executeUpdate();
             System.out.println(result > 0 ? "Successfully updated database!" : "Query not executed. Probably not existing User ID?");

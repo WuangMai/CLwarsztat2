@@ -4,6 +4,7 @@
 src/main/java/entity/workshop2.sql
 CLwarsztat2.iml
 .idea
+target
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml

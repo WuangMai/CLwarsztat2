@@ -24,11 +24,16 @@ public class Main {
 //        System.out.println(userDAO.read(2).getPassword());
 
 //        Updating user test <--------------------------------------
-//        UserDAO userDAO = new UserDAO();
-//        User u1 = userDAO.read(1);
+        UserDAO userDAO = new UserDAO();
+//        for (int i = 1; i <= 353; i++){
+//            User u1 = userDAO.read(i);
+//            u1.setPassword(u1.getPassword());
+//            userDAO.update(u1);
+//        }
+
 //        u1.setUserName("Wuangmai");
 //        u1.setEmail("wuangmai@gmail.com");
-//
+
 //        userDAO.update(u1);
 //        System.out.println(u1.getId());
 
@@ -42,11 +47,12 @@ public class Main {
 //        userDAO.create(user);
 //        userDAO.delete(2);
 //        Finding All users test <----------------------------------
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.findAll().length);
-        System.out.println(Arrays.toString(userDAO.findAll()));
-        System.out.println(userDAO.findAll()[0].getEmail());
-        System.out.println(userDAO.findAll()[1].getEmail());
+//        UserDAO userDAO = new UserDAO();
+//        System.out.println(userDAO.findAll().length);
+////        System.out.println(Arrays.toString(userDAO.findAll()));
+//        System.out.println(userDAO.findAll()[0].getEmail());
+//        System.out.println(userDAO.findAll()[1].getEmail());
+//        System.out.println(userDAO.findAll()[2].getEmail());
 
 
     }
